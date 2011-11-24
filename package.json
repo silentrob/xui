@@ -1,0 +1,21 @@
+{
+    "name": "xui",
+    "description": "A lightweight, dead simple, micro-tiny, super modular JavaScript framework for building mobile web applications.",
+    "version": "2.3.3",
+    "author": "Rob Ellis <rob@silentrob.me>",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/xui/xui.git"
+    },
+    "dependencies": {
+      "argsparser" : "<= 0.0.6",
+      "uglify-js" : "<= 1.1.1"
+    },
+    "engines": { "node": ">= 0.4.10" },
+    "licenses": [
+        { 
+            "type": "MIT",
+            "url" : "http://www.opensource.org/licenses/mit-license.php"
+        }
+    ]
+}
