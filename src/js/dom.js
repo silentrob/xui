@@ -106,8 +106,7 @@ xui.extend({
                 el.parentNode.removeChild(el);
               } else {
                 var elArray = ['outer', 'top', 'bottom'],
-                    wrappedE = wrapHelper(html, (elArray.indexOf(location) > -1 ? el : el.parentNode )),
-                    children = wrappedE.childNodes;
+                    wrappedE = wrapHelper(html, (elArray.indexOf(location) > -1 ? el : el.parentNode ));
                 if (location == "outer") { // .replaceWith
                   el.parentNode.replaceChild(wrappedE, el);
                 } else if (location == "top") { // .prependTo
@@ -119,11 +118,6 @@ xui.extend({
                 } else if (location == "after") { // .insertAfter
                     el.parentNode.insertBefore(wrappedE, el.nextSibling);
                 }
-                var parent = wrappedE.parentNode;
-                while(children.length) {
-                  parent.insertBefore(children[0], wrappedE);
-                }
-                parent.removeChild(wrappedE);
               }
             }
         });
@@ -184,17 +178,59 @@ function getTag(el) {
 }
 
 function wrapHelper(html, el) {
-  if (typeof html == string) return wrap(html, getTag(el));
-  else { var e = document.createElement('div'); e.appendChild(html); return e; }
+  return (typeof html == string) ? wrap(html, (el) ? getTag(el) : "DIV" ) : html;
 }
 
 // private method
 // Wraps the HTML in a TAG, Tag is optional
 // If the html starts with a Tag, it will wrap the context in that tag.
+// Note if you pass XHTML with NO ROOT, AND no TAG, you will see WIERD behaviour - BUG
 function wrap(xhtml, tag) {
-  var e = document.createElement('div');
-  e.innerHTML = xhtml;
-  return e;
+
+  var attributes = {},
+      re = /^<([A-Z][A-Z0-9]*)([^>]*)>([\s\S]*)<\/\1>/i,
+      element,
+      x,
+      a,
+      i = 0,
+      attr,
+      node,
+      attrList,
+      result;
+      
+  if (re.test(xhtml)) {
+      result = re.exec(xhtml);
+      tag = result[1];
+
+      // if the node has any attributes, convert to object
+      if (result[2] !== "") {
+          attrList = result[2].split(/([A-Z\-]*\s*=\s*['|"][A-Z0-9:;#%\.\s]*['|"])/i);
+
+          for (; i < attrList.length; i++) {
+              attr = attrList[i].replace(/^\s*|\s*$/g, "");
+              if (attr !== "" && attr !== " ") {
+                  node = attr.split('=');
+                  attributes[node[0]] = node[1].replace(/(["']?)/g, '');
+              }
+          }
+      }
+      xhtml = result[3];
+  }
+
+  element = document.createElement(tag);
+
+  for (x in attributes) {
+      a = document.createAttribute(x);
+      a.nodeValue = attributes[x];
+      element.setAttributeNode(a);
+  }
+
+  element.innerHTML = xhtml;
+  return element;
+}
+
+xui.html = function(html) {
+  return x$(wrapHelper(html));
 }
 
 /*
