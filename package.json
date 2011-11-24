@@ -1,7 +1,7 @@
 {
     "name": "xui",
     "description": "A lightweight, dead simple, micro-tiny, super modular JavaScript framework for building mobile web applications.",
-    "version": "2.3.3",
+    "version": "2.4.3",
     "author": "Rob Ellis <rob@silentrob.me>",
     "repository": {
         "type": "git",

@@ -8,8 +8,8 @@ var fsutil = require('./util/fileutils');
 var jsp = require("uglify-js").parser;
 var pro = require("uglify-js").uglify;
 
-// TODO Fetch this from package.json
-var version = (fs.readFileSync("./VERSION","utf8")).replace("\n","");
+var version = JSON.parse(fs.readFileSync("./package.json","utf8")).version;
+
 
 // defaults
 var defaultProfile = "core";

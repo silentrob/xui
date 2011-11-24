@@ -101,7 +101,7 @@ Contributors
 License
 -------
 
-_Copyright (c) 2008, 2009, 2010 Brian LeRoux, Brock Whitten, Rob Ellis_
+_Copyright (c) 2008, 2009, 2010, 2011 Brian LeRoux, Brock Whitten, Rob Ellis_
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
