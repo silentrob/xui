@@ -26,6 +26,7 @@ exports.core = {
         "src/js/fx",
         "src/js/style",
         "src/js/xhr",
+        "src/js/data",
         "packages/emile/emile",
         "packages/domready/ready",
         "src/footer"

@@ -7,7 +7,7 @@
 		<script src="../packages/qunit/qunit/qunit.js" type="text/javascript" charset="utf-8"></script>
 		<!-- make sure you include the proper build of XUI -->
 
-		<script src="../lib/xui-2.3.2.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../lib/xui-2.4.3.js" type="text/javascript" charset="utf-8"></script>
 		<script src="tests/core-tests.js" type="text/javascript"></script>
 		<style>
 			h2#qunit-banner {
@@ -134,6 +134,14 @@
           <div id="square_dom" style="margin-top:10px;height:50px;width:50px;background-color:blue;"></div>
           <div id="square_dom_two" style="margin-left:20px;height:50px;width:50px;background-color:black;"></div>
       </div>
+      
+      <div id="test_data"></div>
+      <div id="test_dataattr" data-name="Rob Ellis" data-location="BC Canada"></div>
+      <ul id="test_dataattr2">
+        <li data-color="Green"></li>
+        <li data-color="Blue"></li>
+        <li data-color="Red"></li>                
+      </ul>
 		</div>
 </body>
 </html>
