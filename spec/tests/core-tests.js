@@ -224,22 +224,31 @@ CoreTests.prototype.run = function () {
             
             
         })
-    
         test( 'DOM Helpers WRAP', function(){
-            expect(4);
+            expect(8);
             var n = x$("#more_dom").bottom("This is a test")
             equals(n[0].lastChild.tagName, 'LI', 'Bottom with String - Tag should BE LI');
 
-            var n = x$("#more_dom").top("<li id='woot'>My Tag and ID should be preserved.</li>")
+            var n = x$("#more_dom").top("<li id='woot'>My Tag and ID should be preserved.</li>");
             equals(n[0].firstChild.tagName, 'LI', 'Top with HTML String - Tag should BE LI');
             equals(n[0].firstChild.id, 'woot', 'Tag Should have ID=woot');
             
-            n = x$("#self_close").inner("<input type='text' id='self_close_test' name='test' value='test' /> Some copy")
+            n = x$("#self_close").inner("<input type='text' id='self_close_test' name='test' value='test' /> Some copy");
             equals(n[0].firstChild.tagName, 'INPUT', 'Self Close Tag should be inserted without being wrapped.');
+            
+            n = x$("#more_dom2").bottom("<li>Item 1</li><li>Item 2</li><li>Item 3</li>");
+            equals(n[0].firstChild.tagName, 'LI', 'Item 1 should be LI');
+            equals(n[0].childNodes.length, 3, 'Should have 3 list items');
+            
+            n = x$("#more_dom2").top("<li>Item 1</li><li>Item 2</li><li>Item 3</li>");
+            equals(n[0].firstChild.tagName, 'LI', 'Item 1 should be LI');
+            equals(n[0].childNodes.length, 6, 'Should have 6 list items');
+            
         })
-    
+
+
         test( 'Inserting html "after"', function() {
-            expect(5);
+            expect(7);
             h.html('after', '<div>after</div>');
             equals(h[0].nextSibling.innerHTML, 'after', 'New next sibling element should be created');
             h.after('<div>after again</div>');
@@ -250,14 +259,27 @@ CoreTests.prototype.run = function () {
             equals(h[0].nextSibling, inputs[inputs.length-1], 'Using xui collection as parameter, next sibling to element is last element in parameter collection');
             h.after(inputs[0]);
             equals(h[0].nextSibling, inputs[0], 'Using HTMLElement as parameter, next sibling to element is passed in element');
+            
+            // Insert Multiple elements after
+            n = x$("#more_dom2").after("<p>Para 1</p><p>Para 2</p><p>Para 3</p>");
+            equals(n[0].nextSibling.tagName, 'P', 'Paragraph should appear after');
+            equals(n[0].nextSibling.innerHTML, 'Para 1', 'Paragraph have innerHTML "Para 1"');
+
+            
         });
 
         test( 'Inserting html "before"', function() {
-            expect(2);
+            expect(4);
             h.html('before', '<div>before</div>');
             equals(h[0].previousSibling.innerHTML, 'before', 'Previous sibling element should be created');
             h.before('<div>before again</div>');
             equals(h[0].previousSibling.innerHTML, 'before again', 'Using shortcut .before(), previous sibling element should be created');
+            
+            // Insert Multiple elements before
+            n = x$("#more_dom2").before("<p>Para 1</p><p>Para 2</p><p>Para 3</p>");
+            equals(n[0].previousSibling.tagName, 'P', 'Paragraph should appear after');
+            equals(n[0].previousSibling.innerHTML, 'Para 3', 'Paragraph have innerHTML "Para 3"');
+            
         });
 
         test( 'Inserting html via "inner"', function(){
@@ -269,11 +291,18 @@ CoreTests.prototype.run = function () {
         });
 
         test( 'Inserting html via "outer"', function(){
-            expect(2);
+            expect(4);
             outer.html('outer', '<div id="html-test-new-outer">sneaky</div>');
             equals(document.getElementById('html-test-new-outer').innerHTML, 'sneaky', 'Outer should replace the element and have specified content');
             equals(document.getElementById('html-test-outer'), null, 'Selected element should be gone if replaced with element with different ID');
+            
+            // Insert Multiple elements outter
+            n = x$("#outter_to_the_max").outer("<span class='new_span'>span 1</span><span class='new_span'>span 2</span><span class='new_span'>span 3</span>");
+            equals(document.getElementById('outter_to_the_max'), null, 'Selected element should be gone if replaced with element with different ID');
+            equals(x$(".new_span").length, 3, 'Should be 3 new Spans');
+            
         });
+        
         test( 'Inserting html via "top"', function(){
             expect(3);
             var numOriginalElements = topTest[0].childNodes.length;
@@ -286,7 +315,9 @@ CoreTests.prototype.run = function () {
             var miniCart = document.getElementById('miniCartHeader');
             equals(miniCart.innerHTML, content.replace(/'/g,'"'), 'inserting HTML via "top" should work with anchor tags containing onclick and id attributes');
         });
+
         test( 'Inserting html via "bottom"', function(){
+            expect(5);
             // Base case
             var numOriginalElements = bottom[0].childNodes.length;
             bottom.html('bottom', '<div>undertow</div>');
@@ -300,15 +331,16 @@ CoreTests.prototype.run = function () {
             equals(bottom[0].childNodes.length, numOriginalElements+1, 'Existing elements inside selected element should remain after a "bottom" insertion');
 
             // Numerous sibling elements test.
-            // NB: There is a bug where we can not pass in elements without a root node
-            // numOriginalElements = bottom[0].childNodes.length;
-            // var numerousItems = '' +
-            //   '<a href="#1" class="link_o">one link</a>' +
-            //   '<a href="#2" class="link_o">two link</a>' +
-            //   '<a href="#3" class="link_o">three link</a>';
-            // bottom.html('bottom', numerousItems);
-            // equals(bottom[0].childNodes.length, numOriginalElements + 3, 'Should append numerous elements when passed as string');
+            // NB: There WAS a bug where we can not pass in elements without a root node
+            numOriginalElements = bottom[0].childNodes.length;
+            var numerousItems = '' +
+              '<a href="#1" class="link_o">one link</a>' +
+              '<a href="#2" class="link_o">two link</a>' +
+              '<a href="#3" class="link_o">three link</a>';
+            bottom.html('bottom', numerousItems);
+            equals(bottom[0].childNodes.length, numOriginalElements + 3, 'Should append numerous elements when passed as string');
         });
+    
         test( 'Removing html elements via "remove"', function() {
             expect(2);
             var el = x$('#remove-me');

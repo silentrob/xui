@@ -1,10 +1,3 @@
-/**
-	DOM
-	===
-
-	Set of methods for manipulating the Document Object Model (DOM).
-
-*/
 xui.extend({
 /**
 	html
@@ -56,6 +49,15 @@ xui.extend({
     html: function(location, html) {
         clean(this);
 
+        var inserter = function(ele, wrap, arg) {
+            if (wrap.childNodes.length === 1 || wrap.childNodes[0] === undefined) {
+                ele.insertBefore(wrap, arg);
+            } else {
+                while(wrap.childNodes.length) {  
+                    ele.insertBefore(wrap.childNodes[0], arg);
+                }                        
+            }                        
+        }
         if (arguments.length == 0) {
             var i = [];
             this.each(function(el) {
@@ -67,6 +69,7 @@ xui.extend({
             html = location;
             location = 'inner';
         }
+        
         if (location != 'remove' && html && html.each !== undefined) {
             if (location == 'inner') {
                 var d = document.createElement('p');
@@ -107,16 +110,24 @@ xui.extend({
               } else {
                 var elArray = ['outer', 'top', 'bottom'],
                     wrappedE = wrapHelper(html, (elArray.indexOf(location) > -1 ? el : el.parentNode ));
+                    wrappedE = (wrappedE.length === 1) ? wrappedE = wrappedE[0] : wrappedE = wrappedE[0].parentNode;
+                
                 if (location == "outer") { // .replaceWith
-                  el.parentNode.replaceChild(wrappedE, el);
+                    if (wrappedE.childNodes.length === 1 || wrappedE.childNodes[0] === undefined) {
+                        el.parentNode.replaceChild(wrappedE, el);
+                    } else {
+                        // Hack, if multiple elements, we do a after, and remove - Rob E.
+                        inserter(el.parentNode, wrappedE, el.nextSibling);
+                        el.parentNode.removeChild(el);                        
+                    }                    
                 } else if (location == "top") { // .prependTo
-                    el.insertBefore(wrappedE, el.firstChild);
+                    inserter(el, wrappedE, el.firstChild );
                 } else if (location == "bottom") { // .appendTo
-                    el.insertBefore(wrappedE, null);
+                    inserter(el, wrappedE, null );
                 } else if (location == "before") { // .insertBefore
-                    el.parentNode.insertBefore(wrappedE, el);
+                    inserter(el.parentNode, wrappedE, el);    
                 } else if (location == "after") { // .insertAfter
-                    el.parentNode.insertBefore(wrappedE, el.nextSibling);
+                    inserter(el.parentNode, wrappedE, el.nextSibling);
                 }
               }
             }
@@ -172,65 +183,26 @@ xui.extend({
 "inner outer top bottom remove before after".split(' ').forEach(function (method) {
   xui.fn[method] = function(where) { return function (html) { return this.html(where, html); }; }(method);
 });
+
 // private method for finding a dom element
 function getTag(el) {
-    return (el.children[0] === undefined) ? {'UL':'LI','DL':'DT','TR':'TD'}[el.tagName] || el.tagName : el.children[0].tagName;
+    return (el.children[0] === undefined) ? {'OL':'LI','UL':'LI','DL':'DT','TR':'TD'}[el.tagName] || el.tagName : el.children[0].tagName;
 }
 
 function wrapHelper(html, el) {
-  return (typeof html == string) ? wrap(html, (el) ? getTag(el) : "DIV" ) : html;
+    return (typeof html == string) ? wrap(html, (el) ? getTag(el) : "DIV" ) : [html];
 }
 
 // private method
 // Wraps the HTML in a TAG, Tag is optional
-// If the html starts with a Tag, it will wrap the context in that tag.
-// Note if you pass XHTML with NO ROOT, AND no TAG, you will see WIERD behaviour - BUG
 function wrap(xhtml, tag) {
-
-  var attributes = {},
-      re = /^<([A-Z][A-Z0-9]*)([^>]*)>([\s\S]*)<\/\1>/i,
-      element,
-      x,
-      a,
-      i = 0,
-      attr,
-      node,
-      attrList,
-      result;
-      
-  if (re.test(xhtml)) {
-      result = re.exec(xhtml);
-      tag = result[1];
-
-      // if the node has any attributes, convert to object
-      if (result[2] !== "") {
-          attrList = result[2].split(/([A-Z\-]*\s*=\s*['|"][A-Z0-9:;#%\.\s]*['|"])/i);
-
-          for (; i < attrList.length; i++) {
-              attr = attrList[i].replace(/^\s*|\s*$/g, "");
-              if (attr !== "" && attr !== " ") {
-                  node = attr.split('=');
-                  attributes[node[0]] = node[1].replace(/(["']?)/g, '');
-              }
-          }
-      }
-      xhtml = result[3];
-  }
-
-  element = document.createElement(tag);
-
-  for (x in attributes) {
-      a = document.createAttribute(x);
-      a.nodeValue = attributes[x];
-      element.setAttributeNode(a);
-  }
-
-  element.innerHTML = xhtml;
-  return element;
+    var e = document.createElement(tag);
+    e.innerHTML = xhtml;
+    return (e.childNodes[0].nodeType === 3) ? [e] : e.childNodes;
 }
 
 xui.html = function(html) {
-  return x$(wrapHelper(html));
+  return x$(wrap(html,'DIV'));
 }
 
 /*
@@ -243,7 +215,8 @@ function clean(collection) {
         var d = el,
             n = d.firstChild,
             ni = -1,
-            nx;
+            nx,
+            c = 0;
         while (n) {
             nx = n.nextSibling;
             if (n.nodeType == 3 && !ns.test(n.nodeValue)) {
