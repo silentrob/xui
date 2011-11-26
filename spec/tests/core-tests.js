@@ -210,7 +210,7 @@ CoreTests.prototype.run = function () {
             equals(n[0].innerHTML, "This is a test", 'html should have innerHTML "This is a test"');
         
             var n = x$.html("<ul><li>Item 1</li><li class='two'>Item 2</li></ul>");
-            n.bottom("Item 3");
+            n.bottom("<li>Item 3</li>");
             equals(n[0].lastChild.tagName, 'LI', 'Bottom with HTML String - Tag should BE LI');
             equals(n[0].lastChild.innerHTML, 'Item 3', 'New element in Fragment should have innerHTML "Item 3"');
 
@@ -693,6 +693,56 @@ CoreTests.prototype.run = function () {
           });
           x.bottom(i);
           i.fire('keyup');
+        });
+
+    // --
+    /// Data specs
+    // --
+    module("Data (data.js)", {
+        setup:function() {
+            x = x$("#test_data");
+            da = x$("#test_dataattr");
+        },
+        teardown:function() {
+            x = null,
+            da = null;
+        }
+    });
+        test('Get and Set Data', function() {
+          expect(4);
+          x.setData("key","value");
+          equals(x.getData("key")[0], "value", 'Set Data Propert - Simple String');
+
+          x.setData("pi",3.14);
+          equals(x.getData("pi")[0], 3.14, 'Set Data Propert - Number');
+
+          x.setData("el",x);
+          equals(x.getData("el")[0], x, 'Set Data Propert - Inception');
+          
+
+          x.setData("cb","This is a test");
+          x.getData("cb", function(el, data) {
+              equals(data, "This is a test", 'Get Data via Callback');
+          });
+
+
+        });
+
+        test('Data Attributes', function() {
+          expect(4);
+          equals(da.getData("name")[0], "Rob Ellis", 'Data Attributes Get');
+          
+          // Over ride name
+          da.setData("name", "Fil Maj");
+          equals(da.getData("name")[0], "Fil Maj", 'Data Attributes Get');          
+          
+          // Delete Fil and fall back to Rob
+          da.setData("name", undefined);
+          equals(da.getData("name")[0], "Rob Ellis", 'Data Attributes Get'); 
+          
+          var c = x$("#test_dataattr2 LI").getData("color");
+          equals(c.length, 3, 'Fetch Multiple Attribute Values');
+          
         });
 
     QUnit.start();
