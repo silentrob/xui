@@ -1,3 +1,5 @@
+
+
 // QUnit is an interesting beast
 QUnit.config.autostart = false;
 if (typeof window.localStorage != 'undefined') window.localStorage.clear();
@@ -215,7 +217,7 @@ CoreTests.prototype.run = function () {
             equals(n[0].lastChild.innerHTML, 'Item 3', 'New element in Fragment should have innerHTML "Item 3"');
 
             equals(n.find("LI").length, 3, 'Should be able to find 3 elements');
-
+            
             //
             // TODO : For some reason select filters does not yet work on x$.html 
             // IE: Given the test above...

@@ -28,6 +28,7 @@ x$.extend({
     		x$('.flash').setData("pi", 3.145 );
     		x$('.flash').setData('color', '#000');
     */
+    
   setData: function(key, value) {
       this.each(function(el) {
           el[key] = value;
