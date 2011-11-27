@@ -15,13 +15,11 @@ To get the full source you need  _Git_:
     $ git submodule init
     $ git submodule update
 
-To build xui, you will need _Ruby_, and if minifying, _Java_ as well:
+To build xui, you will need _NODE.JS_ :
 
     $ ./build                 # Generates lib/xui.js
     $ ./build profile=bb      # Builds xui for BlackBerry 4/5 browsers (uses Sizzle selector engine)
     $ ./build profile=ie      # Builds xui for Internet Explorer
-    $ ./build --minify        # Builds xui and minifies (Java required)
-    $ ./build --cat=path/f.js # Builds xui and appends the contents of f.js to the built files under lib/
 
 Generating Documentation
 ------------------------
@@ -82,21 +80,7 @@ Creators
 Contributors
 ------------
 
-- http://github.com/rmurphey
-- http://github.com/remy
-- http://github.com/filmaj
-- http://github.com/alunny
-- http://github.com/gdagley
-- http://github.com/slexaxton
-- http://github.com/cluster
-- http://github.com/joemccann
-- http://github.com/mwbrooks
-- http://github.com/RichardBronosky
-- http://github.com/bryfox
-- http://github.com/i8ramin
-- http://github.com/edufelipe
-
-(If we missed you, please let us know!)
+(See the package.json file - If we missed you, please let us know!)
 
 License
 -------

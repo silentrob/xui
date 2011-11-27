@@ -3,6 +3,21 @@
     "description": "A lightweight, dead simple, micro-tiny, super modular JavaScript framework for building mobile web applications.",
     "version": "2.4.3",
     "author": "Rob Ellis <rob@silentrob.me>",
+    "contributors" : [
+      { "name" : "Rebecca Murphey", "url" : "http://github.com/rmurphey"},
+      { "name" : "Remy Sharp", "url" : "http://github.com/remy"},
+      { "name" : "Fil Maj", "url" : "http://github.com/filmaj"},
+      { "name" : "Andrew Lunny", "url" : "http://github.com/alunny"},
+      { "name" : "Geoffrey Dagley", "url" : "http://github.com/gdagley"},
+      { "name" : "Alex Sexton", "url" : "http://github.com/slexaxton"},
+      { "name" : "Clément Uster", "url" : "http://github.com/cluster"},
+      { "name" : "Joe McCann", "url" : "http://github.com/joemccann"},
+      { "name" : "Michael Brooks", "url" : "http://github.com/mwbrooks"},
+      { "name" : "Richard Bronosky", "url" : "http://github.com/RichardBronosky"},
+      { "name" : "Bryan Fox", "url" : "http://github.com/bryfox"},
+      { "name" : "Ramin B", "url" : "http://github.com/i8ramin"},
+      { "name" : "Eduardo Felipe", "url" : "http://github.com/edufelipe"}
+    ],
     "repository": {
         "type": "git",
         "url": "http://github.com/xui/xui.git"
@@ -19,3 +34,6 @@
         }
     ]
 }
+
+
+
